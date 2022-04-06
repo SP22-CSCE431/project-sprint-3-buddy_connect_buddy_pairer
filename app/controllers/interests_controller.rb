@@ -23,8 +23,11 @@ class InterestsController < ApplicationController
   # POST /interests or /interests.json
   def create
     temp_params = interest_params
-    puts temp_params
     if temp_params[:biography].present?
+      puts "here"
+      temp_params.delete :biography
+    end
+    if temp_params[:biography] == ""
       temp_params.delete :biography
     end
 
@@ -59,7 +62,7 @@ class InterestsController < ApplicationController
           :description => interest_params[:biography],
         }
         puts temp_params
-        biography = Biography.find_by(userId: current_user.studentId)
+        biography = Biography.find_or_create_by(userId: current_user.studentId)
         biography.update(create_bio_params)
         @interest = Interest.find_by(userId: params[:interest][:userId])
         if @interest.update(temp_params)
